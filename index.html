@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SQLi Foundations — Executive Interactive Curriculum &amp; Lab Prerequisites</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+    --bg:#090a0f;
+    --surface:#12141c;
+    --surface-subtle:#171a24;
+    --console-bg:#0c0e14;
+    --console-border:#222634;
+    --text:#f1f5f9;
+    --text-secondary:#94a3b8;
+    --text-muted:#64748b;
+    --border:#1e2230;
+    --accent:#38bdf8;
+    --accent-soft:rgba(56,189,248,.1);
+    --accent-border:rgba(56,189,248,.28);
+    --success:#34d399;
+    --success-soft:rgba(52,211,153,.12);
+    --warn:#fbbf24;
+    --warn-soft:rgba(251,191,36,.12);
+    --danger:#fb7185;
+    --danger-soft:rgba(251,113,133,.14);
+    --radius:14px;
+    --shadow:0 12px 32px rgba(0,0,0,.45);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg);color:var(--text);
+    -webkit-font-smoothing:antialiased;line-height:1.65;
+}
+code,.mono{font-family:'JetBrains Mono',monospace}
+::selection{background:rgba(56,189,248,.25);color:#fff}
+
+/* ================= TOP EXECUTIVE HEADER ================= */
+.exec-header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(9,10,15,.88);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border);
+    padding:14px 28px;
+}
+.eh-inner{
+    max-width:1200px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.eh-brand{display:flex;align-items:center;gap:12px}
+.eh-logo{
+    width:34px;height:34px;border-radius:9px;
+    background:linear-gradient(135deg,#1e293b,#0f172a);
+    border:1px solid #334155;
+    display:grid;place-items:center;
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);
+}
+.eh-title{font-size:14.5px;font-weight:600;color:var(--text);letter-spacing:-.2px}
+.eh-sub{font-size:12px;color:var(--text-muted);margin-left:8px;padding-left:8px;border-left:1px solid var(--border)}
+@media(max-width:640px){.eh-sub{display:none}}
+
+.eh-right{display:flex;align-items:center;gap:14px}
+.progress-pill{
+    display:flex;align-items:center;gap:10px;
+    background:var(--surface);border:1px solid var(--border);
+    padding:6px 12px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-secondary);
+}
+.pp-bar{width:88px;height:5px;border-radius:99px;background:#1e2230;overflow:hidden}
+.pp-fill{height:100%;width:10%;background:var(--accent);transition:width .3s ease}
+.cheat-btn{
+    font-family:'Inter',sans-serif;font-size:12.5px;font-weight:500;
+    padding:6px 13px;border-radius:8px;cursor:pointer;
+    background:var(--surface);border:1px solid var(--border);color:var(--text-secondary);
+    transition:all .15s;
+}
+.cheat-btn:hover{border-color:var(--accent);color:var(--text)}
+
+/* ================= MAIN SHELL ================= */
+.app-shell{
+    max-width:1200px;margin:28px auto 72px;padding:0 28px;
+    display:grid;grid-template-columns:260px 1fr;gap:36px;align-items:start;
+}
+@media(max-width:940px){
+    .app-shell{grid-template-columns:1fr;gap:24px;padding:0 18px}
+}
+
+/* Left Syllabus Navigation */
+.syllabus-nav{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:18px 12px;box-shadow:var(--shadow);position:sticky;top:78px;
+}
+@media(max-width:940px){.syllabus-nav{position:static}}
+.sn-header{padding:0 10px 12px;border-bottom:1px solid var(--border);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.sn-course{font-family:'JetBrains Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);font-weight:600}
+.sn-count{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-muted)}
+.sn-group{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);padding:12px 10px 5px}
+.sn-item{
+    display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;
+    padding:8.5px 10px;border-radius:8px;border:1px solid transparent;background:transparent;
+    font-size:13px;color:var(--text-secondary);cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;
+}
+.sn-item-left{display:flex;align-items:center;gap:9px;min-width:0}
+.sn-item:hover{background:var(--surface-subtle);color:var(--text)}
+.sn-item.active{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-border);font-weight:600}
+.sn-num{font-family:'JetBrains Mono',monospace;font-size:11px;opacity:.75;flex:0 0 20px}
+.sn-check{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--success);opacity:0}
+.sn-item.visited .sn-check{opacity:1}
+
+/* Right Single-Lesson Stage */
+.lesson-stage{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:44px 50px;box-shadow:var(--shadow);min-width:0;
+}
+@media(max-width:680px){
+    .lesson-stage{padding:26px 20px}
+}
+
+.lh-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.lh-step{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px}
+.lh-progress{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted)}
+.lh-title{
+    font-size:32px;font-weight:700;color:var(--text);
+    line-height:1.22;letter-spacing:-.5px;margin-bottom:14px;
+}
+.lh-lead{
+    font-size:16.5px;line-height:1.78;color:var(--text-secondary);
+    padding-bottom:28px;border-bottom:1px solid var(--border);margin-bottom:34px;
+}
+.lh-lead strong{color:var(--text);font-weight:600}
+
+/* 3-Block Section Structure */
+.block-section{margin-bottom:36px}
+.block-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:1.2px;color:var(--text-muted);
+    margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;
+}
+.concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:760px){.concept-grid{grid-template-columns:1fr}}
+.concept-card{
+    background:var(--surface-subtle);border:1px solid var(--border);border-radius:11px;
+    padding:20px;display:flex;flex-direction:column;gap:6px;
+}
+.cc-tag{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--accent)}
+.cc-title{font-size:15px;font-weight:600;color:var(--text)}
+.cc-body{font-size:13.5px;line-height:1.65;color:var(--text-secondary)}
+.cc-code{
+    font-family:'JetBrains Mono',monospace;font-size:12px;padding:2px 6px;
+    border-radius:5px;background:var(--console-bg);border:1px solid var(--console-border);color:#e2e8f0;
+}
+
+/* Interactive Console Box */
+.console-box{
+    background:var(--console-bg);border:1px solid var(--console-border);
+    border-radius:12px;overflow:hidden;color:#f8fafc;
+}
+.cb-top{
+    padding:13px 20px;border-bottom:1px solid var(--console-border);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    background:rgba(255,255,255,.015);
+}
+.cb-title{font-family:'JetBrains Mono',monospace;font-size:12px;color:#94a3b8;display:flex;align-items:center;gap:8px}
+.cb-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+.cb-presets{display:flex;gap:7px;flex-wrap:wrap}
+.cb-btn{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:500;
+    padding:6.5px 12px;border-radius:7px;border:1px solid #262b3d;
+    background:#151824;color:#cbd5e1;cursor:pointer;transition:all .15s;
+}
+.cb-btn:hover{border-color:#475569;color:#fff}
+.cb-btn.active{background:var(--accent);color:#090a0f;border-color:var(--accent);font-weight:600}
+
+.cb-input-row{
+    padding:14px 20px;border-bottom:1px solid var(--console-border);
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:rgba(255,255,255,.01);
+}
+.cb-input-label{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-secondary)}
+.cb-input{
+    flex:1;min-width:220px;background:#141722;border:1px solid #2d3348;
+    border-radius:7px;padding:8px 12px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;outline:none;
+}
+.cb-input:focus{border-color:var(--accent)}
+
+.cb-query-bar{
+    padding:16px 20px;border-bottom:1px solid var(--console-border);
+    font-family:'JetBrains Mono',monospace;font-size:13.5px;color:#e2e8f0;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    background:rgba(0,0,0,.25);line-height:1.6;
+}
+.sql-kw{color:var(--accent);font-weight:600}
+.sql-str{color:var(--success)}
+.sql-num{color:var(--warn)}
+.sql-inj{color:var(--danger);background:var(--danger-soft);padding:2px 6px;border-radius:4px;font-weight:600}
+.sql-comment{color:#64748b;text-decoration:line-through;font-style:italic}
+
+.cb-status{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:4px 10px;border-radius:99px;
+    background:var(--success-soft);color:var(--success);white-space:nowrap;
+}
+.cb-status.warn{background:var(--warn-soft);color:var(--warn)}
+.cb-status.danger{background:var(--danger-soft);color:var(--danger)}
+
+.cb-table-wrap{padding:16px 20px;overflow-x:auto}
+.cb-table{width:100%;border-collapse:collapse;font-family:'JetBrains Mono',monospace;font-size:12.5px}
+.cb-table th{text-align:left;padding:9px 12px;color:#94a3b8;border-bottom:1px solid var(--console-border);font-weight:500}
+.cb-table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.04);color:#cbd5e1}
+.cb-table tr:last-child td{border-bottom:none}
+.cb-table tr.matched td{background:rgba(52,211,153,.08);color:#fff}
+.cb-table tr.filtered td{opacity:.32}
+.cb-table td.hl-cell{background:rgba(56,189,248,.16);color:#fff;font-weight:600}
+.eval-badge{display:inline-block;padding:2.5px 8px;border-radius:5px;font-size:11px;font-weight:600}
+.eval-true{background:var(--success-soft);color:var(--success)}
+.eval-false{background:rgba(148,163,184,.1);color:#94a3b8}
+.eval-danger{background:var(--danger-soft);color:var(--danger)}
+
+/* 3-Tier Visual Cards inside Console */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:18px 20px}
+@media(max-width:720px){.tier-grid{grid-template-columns:1fr}}
+.tier-card{background:#141722;border:1px solid #262b3d;border-radius:9px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.tc-step{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--accent);text-transform:uppercase}
+.tc-name{font-size:13.5px;font-weight:600;color:#fff}
+.tc-code{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--success);background:#090a0f;padding:8px 10px;border-radius:6px;border:1px solid #1e2230;word-break:break-word}
+.tc-desc{font-size:12px;color:var(--text-secondary);line-height:1.5}
+
+.cb-explain{
+    padding:15px 20px;background:rgba(56,189,248,.06);border-top:1px solid var(--console-border);
+    font-size:13.5px;color:#e2e8f0;line-height:1.65;
+}
+.cb-explain strong{color:#fff}
+.cb-explain code{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent)}
+
+/* Block 3: Student Reference Notes + Classroom Question */
+.notes-card{
+    background:var(--surface-subtle);border:1px solid var(--border);border-left:3px solid var(--accent);
+    border-radius:11px;padding:22px 26px;
+}
+.nc-head{
+    font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:12px;
+    display:flex;align-items:center;justify-content:space-between;
+}
+.nc-list{padding-left:18px;font-size:14.5px;line-height:1.78;color:var(--text-secondary)}
+.nc-list li{margin-bottom:7px}
+.nc-list li:last-child{margin-bottom:0}
+.nc-list strong{color:var(--text);font-weight:600}
+.nc-list code{font-family:'JetBrains Mono',monospace;font-size:12.5px;padding:1.5px 5px;border-radius:4px;background:var(--console-bg);border:1px solid var(--border);color:#e2e8f0}
+
+.classroom-prompt{
+    margin-top:16px;padding-top:14px;border-top:1px dashed var(--border);
+    display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.cp-question{font-size:13.5px;color:var(--text);font-weight:500;flex:1;min-width:220px}
+.cp-question span{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--warn);text-transform:uppercase;margin-right:8px}
+.cp-btn{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:5px 11px;border-radius:6px;
+    border:1px solid var(--border);background:var(--surface);color:var(--text-secondary);cursor:pointer;
+}
+.cp-btn:hover{border-color:var(--accent);color:var(--text)}
+.cp-answer{
+    width:100%;display:none;margin-top:8px;padding:11px 14px;border-radius:8px;
+    background:var(--console-bg);border:1px solid var(--border);font-size:13px;color:var(--text-secondary);
+}
+.cp-answer.show{display:block}
+.cp-answer strong{color:var(--success)}
+
+/* Stage Footer Navigation */
+.stage-footer{
+    margin-top:38px;padding-top:24px;border-top:1px solid var(--border);
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.sf-btn{
+    font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;
+    padding:10px 20px;border-radius:9px;cursor:pointer;transition:all .15s;
+    border:1px solid var(--border);background:var(--surface-subtle);color:var(--text);
+}
+.sf-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.sf-btn:disabled{opacity:.35;cursor:not-allowed}
+.sf-btn.primary{background:var(--accent);color:#090a0f;border-color:var(--accent)}
+.sf-btn.primary:hover:not(:disabled){opacity:.9;color:#090a0f}
+.sf-hint{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-muted)}
+@media(max-width:640px){.sf-hint{display:none}}
+
+/* Cheat Sheet Modal */
+.modal-backdrop{
+    position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);
+    display:none;align-items:center;justify-content:center;padding:20px;
+}
+.modal-backdrop.open{display:flex}
+.modal-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    max-width:880px;width:100%;max-height:85vh;display:flex;flex-direction:column;box-shadow:var(--shadow);
+}
+.mc-head{padding:18px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mc-title{font-size:16px;font-weight:600;color:var(--text)}
+.mc-close{background:transparent;border:1px solid var(--border);color:var(--text-secondary);border-radius:7px;padding:4px 10px;cursor:pointer;font-size:13px}
+.mc-body{padding:20px 24px;overflow-y:auto}
+</style>
+</head>
+<body>
+
+<!-- TOP EXECUTIVE BAR -->
+<header class="exec-header">
+    <div class="eh-inner">
+        <div class="eh-brand">
+            <div class="eh-logo">&gt;_</div>
+            <span class="eh-title">SQLi Foundations</span>
+            <span class="eh-sub">Database, SQL Clauses &amp; Pentesting Prerequisites</span>
+        </div>
+        <div class="eh-right">
+            <div class="progress-pill">
+                <span id="topProgressText">Lesson 01 / 10</span>
+                <div class="pp-bar"><div class="pp-fill" id="topProgressFill"></div></div>
+            </div>
+            <button class="cheat-btn" id="openCheatModalBtn" onclick="toggleCheatModal(true)">
+                Quick Reference Sheet
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN WORKSPACE: LEFT SYLLABUS + RIGHT SINGLE-LESSON STAGE -->
+<div class="app-shell">
+
+    <!-- Left Syllabus Sidebar -->
+    <aside class="syllabus-nav" aria-label="Course Syllabus">
+        <div class="sn-header">
+            <span class="sn-course">Syllabus</span>
+            <span class="sn-count" id="completedCountLabel">1 / 10 Viewed</span>
+        </div>
+        <div id="syllabusContainer">
+            <!-- Populated by JS -->
+        </div>
+    </aside>
+
+    <!-- Right Single-Topic Stage (Strictly 1 Lesson on Screen at a Time) -->
+    <main class="lesson-stage">
+
+        <!-- Lesson Header -->
+        <div class="lh-meta">
+            <span class="lh-step" id="stageModuleTag">Part 1 · Foundations</span>
+            <span class="lh-progress" id="stageStepCount">Lesson 01 of 10</span>
+        </div>
+        <h1 class="lh-title" id="stageTitle">How the Web Talks to Databases</h1>
+        <p class="lh-lead" id="stageLead"></p>
+
+        <!-- BLOCK 1: 3-Card Core Mechanics -->
+        <div class="block-section">
+            <div class="block-label">
+                <span>01 · Core Mechanics</span>
+                <span id="stageBlock1Sub">3 Key Concepts</span>
+            </div>
+            <div class="concept-grid" id="stageConceptCards"></div>
+        </div>
+
+        <!-- BLOCK 2: Interactive Live Console -->
+        <div class="block-section">
+            <div class="block-label">
+                <span>02 · Interactive Lab Console</span>
+                <span id="stageConsoleSub">Click presets below to test live</span>
+            </div>
+            <div class="console-box" id="stageConsoleBox">
+                <!-- Populated dynamically per lesson -->
+            </div>
+        </div>
+
+        <!-- BLOCK 3: Student Reference Notes & Classroom Prompt -->
+        <div class="block-section" style="margin-bottom:0">
+            <div class="block-label">
+                <span>03 · Student Reference Notes &amp; Check</span>
+                <span id="stageNoteRef">Revision Summary</span>
+            </div>
+            <div class="notes-card">
+                <div class="nc-head">
+                    <span>📖 Key Takeaways for Revision &amp; Labs</span>
+                    <span id="stageNoteBadge">Lesson 01</span>
+                </div>
+                <ul class="nc-list" id="stageNotesList"></ul>
+
+                <div class="classroom-prompt">
+                    <div class="cp-question">
+                        <span>💬 Check Understanding:</span>
+                        <strong id="stagePromptQ"></strong>
+                    </div>
+                    <button class="cp-btn" id="stagePromptBtn" onclick="togglePromptAnswer()">Reveal Answer</button>
+                    <div class="cp-answer" id="stagePromptA"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stage Footer Navigation -->
+        <footer class="stage-footer">
+            <button class="sf-btn" id="prevLessonBtn" onclick="stepLesson(-1)">← Previous Lesson</button>
+            <span class="sf-hint">Tip: Use ← and → arrow keys to switch lessons</span>
+            <button class="sf-btn primary" id="nextLessonBtn" onclick="stepLesson(1)">Next Lesson →</button>
+        </footer>
+
+    </main>
+</div>
+
+<!-- QUICK REFERENCE CHEAT SHEET MODAL -->
+<div class="modal-backdrop" id="cheatModal">
+    <div class="modal-card">
+        <div class="mc-head">
+            <span class="mc-title">Complete SQL Clauses &amp; SQLi Lab Reference Sheet</span>
+            <button class="mc-close" id="closeCheatModalBtn" onclick="toggleCheatModal(false)">✕ Close</button>
+        </div>
+        <div class="mc-body">
+            <table class="cb-table">
+                <thead>
+                    <tr>
+                        <th>Clause / Payload</th>
+                        <th>Category</th>
+                        <th>What It Does &amp; Why It Matters in Labs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>SELECT * FROM users</code></td><td>SQL Clause</td><td>Reads all columns (<code>*</code>) and all rows from the <code>users</code> table</td></tr>
+                    <tr><td><code>SELECT username, role FROM users</code></td><td>SQL Clause</td><td>Projects only specific columns (required when matching columns in <code>UNION</code>)</td></tr>
+                    <tr><td><code>WHERE username = 'alice'</code></td><td>SQL Clause</td><td>Filters rows where condition is TRUE; strings require <code>'single quotes'</code></td></tr>
+                    <tr><td><code>AND</code> vs. <code>OR</code></td><td>Boolean Logic</td><td><code>AND</code> needs both TRUE (higher precedence); <code>OR</code> needs only one side TRUE</td></tr>
+                    <tr><td><code>ORDER BY 1, 2, 3...</code></td><td>Column Probing</td><td>Sorts by column index; pentesters increment the number until an error reveals the exact column count</td></tr>
+                    <tr><td><code>LIMIT 1</code></td><td>Row Control</td><td>Returns only the first matching row (usually <code>id = 1</code>, the administrator)</td></tr>
+                    <tr><td><code>--</code> or <code>#</code></td><td>SQL Comment</td><td>Instructs the database to ignore everything written after it on that line</td></tr>
+                    <tr><td><code>admin' --</code></td><td>Auth Bypass</td><td>Closes the username string at <code>'admin'</code> and comments out the password check</td></tr>
+                    <tr><td><code>' OR 1=1 --</code></td><td>Tautology SQLi</td><td>Forces the <code>WHERE</code> clause to evaluate to TRUE for every row in the table</td></tr>
+                    <tr><td><code>' UNION SELECT a,b,c FROM users--</code></td><td>In-Band UNION</td><td>Appends secret rows from <code>users</code> onto the page (must match column count &amp; types)</td></tr>
+                    <tr><td><code>' AND SUBSTR(pass,1,1)='a'--</code></td><td>Boolean Blind</td><td>Extracts data 1 character at a time by observing True vs. False page differences</td></tr>
+                    <tr><td><code>' AND SLEEP(3)--</code></td><td>Time-Based Blind</td><td>Infers True/False by measuring whether the server pauses before responding</td></tr>
+                    <tr><td><code>WHERE username = ?</code></td><td>Defense</td><td>Parameterized Query (Prepared Statement) — locks SQL structure first so input is strictly literal data</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+const USERS = [
+    { id: 1, username: 'admin', password: 'root@99!', role: 'admin' },
+    { id: 2, username: 'alice', password: 'cat123', role: 'student' },
+    { id: 3, username: 'bob', password: 'guitar88', role: 'student' },
+    { id: 4, username: 'charlie', password: 'coffee07', role: 'moderator' }
+];
+
+const PRODUCTS = [
+    { id: 101, name: 'Pro Security Laptop', category: 'hardware', price: 1200 },
+    { id: 102, name: 'Hardware YubiKey', category: 'hardware', price: 55 },
+    { id: 103, name: 'Wi-Fi Packet Adapter', category: 'network', price: 40 },
+    { id: 104, name: 'Web Pentesting Guide', category: 'books', price: 35 }
+];
+
+const LESSONS = [
+    {
+        num: '01',
+        group: 'Part 1 · Foundations',
+        shortTitle: 'How Web & DBs Talk',
+        moduleTag: 'Module 01 · Foundations',
+        title: 'How a Website Talks to a Database',
+        lead: 'When you log in or search for a product on a website, your web browser <strong>never touches the database directly</strong>. Instead, every website works like a restaurant with three separate roles: the <strong>Browser</strong> (Customer), the <strong>Backend Server</strong> (Waiter), and the <strong>Database</strong> (Locked Storeroom).',
+        cards: [
+            { tag: 'Tier 1 · Client', title: 'The Browser (Customer)', body: 'Displays the form where you type your username or search term and sends it over HTTP.' },
+            { tag: 'Tier 2 · Application', title: 'The Backend (Waiter)', body: 'Receives your text, places it onto a written SQL order slip, and walks into the kitchen.' },
+            { tag: 'Tier 3 · Storage', title: 'The Database (Storeroom)', body: 'Blindly executes the SQL order slip it receives from the waiter and returns matching records.' }
+        ],
+        consoleType: 'architecture',
+        notes: [
+            '<strong>Why Browsers Cannot Touch Databases:</strong> If a browser could send SQL directly to the database, any visitor could open browser DevTools and delete or steal the entire database.',
+            '<strong>The Waiter Builds the Query:</strong> The user only supplies raw input text. The <strong>Backend Application</strong> is responsible for building the SQL query string.',
+            '<strong>The Core Golden Rule:</strong> <em>"The database cannot tell the developer\'s SQL code from the user\'s input once they are joined into one string."</em>'
+        ],
+        promptQ: 'Who actually builds the SQL query—the user\'s browser, the backend server, or the database?',
+        promptA: '<strong>The Backend Server (the Waiter).</strong> The browser only sends raw text inside an HTTP request, and the database only executes the final SQL string the backend hands to it.'
+    },
+    {
+        num: '02',
+        group: 'Part 1 · Foundations',
+        shortTitle: 'Tables, Columns & Keys',
+        moduleTag: 'Module 02 · Foundations',
+        title: 'Inside the Database: Tables, Columns & Primary Keys',
+        lead: 'A <strong>Relational Database</strong> (such as PostgreSQL, MySQL, SQLite, or MS SQL Server) is not a mysterious black box. It organizes data into structured <strong>tables</strong> made of vertical <strong>columns</strong> and horizontal <strong>rows</strong>—just like a spreadsheet.',
+        cards: [
+            { tag: 'Vertical Structure', title: 'Columns & Data Types', body: 'Each column stores one specific attribute with a strict type: numbers (<code class="cc-code">INT</code>) or text (<code class="cc-code">TEXT</code>).' },
+            { tag: 'Horizontal Records', title: 'Rows (User Accounts)', body: 'Each horizontal row is one complete record—for example, Row #2 holds everything about Alice.' },
+            { tag: 'Unique Identity', title: 'Primary Key (id = 1)', body: 'The <code class="cc-code">id</code> column uniquely identifies each row. Because Admin is created first, <strong>Row #1 (id = 1) is almost always Admin!</strong>' }
+        ],
+        consoleType: 'anatomy',
+        notes: [
+            '<strong>Table Schema:</strong> The blueprint of a table—its table name (<code>users</code>), its column names (<code>id, username, password, role</code>), and their data types.',
+            '<strong>Why Column Count &amp; Types Matter for SQLi:</strong> When extracting data from other tables later using <code>UNION SELECT</code>, your injected query must match the exact number of columns and data types of the original table.',
+            '<strong>Why Primary Key <code>id = 1</code> Matters:</strong> When an attacker tricks a login query into returning all rows, the backend logs into the first row returned—which is almost always <code>id = 1 (admin)</code>.'
+        ],
+        promptQ: 'Why is the account with id = 1 almost always the most valuable target in a users table?',
+        promptA: '<strong>Because the administrator account is created first when the application is installed, receiving Primary Key id = 1.</strong>'
+    },
+    {
+        num: '03',
+        group: 'Part 2 · SQL Clauses',
+        shortTitle: 'SELECT & FROM',
+        moduleTag: 'Module 03 · SQL Clauses Part 1',
+        title: 'Reading Data with SELECT & FROM',
+        lead: '<strong>SQL (Structured Query Language)</strong> is the language the backend server uses to read or modify database tables. Every read query begins with two essential clauses: <strong>SELECT</strong> (which columns you want) and <strong>FROM</strong> (which table to open).',
+        cards: [
+            { tag: 'All Columns', title: 'SELECT *', body: 'The star symbol (<code class="cc-code">*</code>) is a wildcard meaning <em>"give me every column in this table."</em>' },
+            { tag: 'Specific Columns', title: 'SELECT col1, col2', body: 'Listing column names separated by commas returns only those columns in that exact order.' },
+            { tag: 'Target Table', title: 'FROM table_name', body: 'Tells the database engine which table to read from (such as <code class="cc-code">FROM users</code> or <code class="cc-code">FROM products</code>).' }
+        ],
+        consoleType: 'select_from',
+        notes: [
+            '<strong>Clause Order Matters:</strong> In SQL, <code>SELECT</code> always comes first, followed by the column list, followed by <code>FROM</code> and the table name.',
+            '<strong>Semicolon Termination (<code>;</code>):</strong> A semicolon marks the end of a SQL statement.',
+            '<strong>Why Specific Columns Matter in Pentesting:</strong> In a 3-column product table, an attacker writes <code>SELECT id, username, password FROM users</code> to fit 3 user columns into 3 product columns.'
+        ],
+        promptQ: 'What is the difference between SELECT * FROM users and SELECT username, role FROM users?',
+        promptA: '<strong>SELECT * returns all 4 columns (including id and password), whereas SELECT username, role returns only those 2 requested columns.</strong>'
+    },
+    {
+        num: '04',
+        group: 'Part 2 · SQL Clauses',
+        shortTitle: 'WHERE & Single Quotes',
+        moduleTag: 'Module 04 · SQL Clauses Part 2',
+        title: 'Filtering Rows with WHERE & Single Quotes',
+        lead: 'Applications rarely want every row in a table. They add a <strong>WHERE</strong> clause to test a condition against <strong>each row one by one</strong>—and wrap text values inside <strong>single quotes (\' \')</strong> so the database knows where user data begins and ends.',
+        cards: [
+            { tag: 'Row-by-Row Filter', title: 'How WHERE Thinks', body: 'The database tests your condition on every row. If it evaluates to <strong>TRUE</strong>, the row is returned; if <strong>FALSE</strong>, it is skipped.' },
+            { tag: 'String Delimiters', title: 'Single Quotes (\' \')', body: 'Text values must sit inside single quotes (<code class="cc-code">\'alice\'</code>) so SQL treats them as literal text data rather than SQL commands.' },
+            { tag: 'Numeric Values', title: 'Numbers Have No Quotes', body: 'Numeric comparisons like <code class="cc-code">WHERE id = 1</code> or <code class="cc-code">WHERE price &lt;= 60</code> are written without quotes.' }
+        ],
+        consoleType: 'where_quotes',
+        notes: [
+            '<strong>Comparison Operators:</strong> <code>=</code> (equal to), <code>!=</code> or <code>&lt;&gt;</code> (not equal to), <code>&lt;</code> (less than), <code>&lt;=</code> (less than or equal), <code>&gt;</code> (greater than), <code>&gt;=</code> (greater than or equal).',
+            '<strong>Why Single Quotes Are the #1 SQLi Target:</strong> Single quotes are the fence separating safe user text from executable SQL commands. If user input contains a <code>\'</code>, it jumps over that fence!',
+            '<strong>What Happens When Quotes Are Missing:</strong> Writing <code>WHERE username = alice</code> (without quotes) causes an error because SQL looks for a column named <code>alice</code>.'
+        ],
+        promptQ: 'Why must \'alice\' be wrapped in single quotes in WHERE username = \'alice\', while 1 has no quotes in WHERE id = 1?',
+        promptA: '<strong>Single quotes tell the SQL parser that \'alice\' is a text string literal rather than a SQL keyword or column name, whereas numbers (1) are self-evident numeric literals.</strong>'
+    },
+    {
+        num: '05',
+        group: 'Part 2 · SQL Clauses',
+        shortTitle: 'AND, OR & Precedence',
+        moduleTag: 'Module 05 · SQL Clauses Part 3',
+        title: 'Combining Conditions: AND, OR & Precedence',
+        lead: 'Login forms and complex filters combine multiple conditions in the <code>WHERE</code> clause using <strong>AND</strong> and <strong>OR</strong>. Understanding how boolean logic evaluates—and why <strong>AND binds before OR</strong>—is the exact key to understanding authentication bypass.',
+        cards: [
+            { tag: 'Strict Logic', title: 'AND (Both Must Be True)', body: '<code class="cc-code">A AND B</code> is TRUE only when <strong>both</strong> sides are TRUE. Login forms use <code class="cc-code">username = \'...\' AND password = \'...\'</code>.' },
+            { tag: 'Permissive Logic', title: 'OR (Either Can Be True)', body: '<code class="cc-code">A OR B</code> is TRUE if <strong>at least one side</strong> is TRUE—even if the first side is completely FALSE!' },
+            { tag: 'Tautology (Always True)', title: 'Why OR 1=1 Works', body: 'Since <code class="cc-code">1=1</code> is always TRUE, adding <code class="cc-code">OR 1=1</code> makes the entire <code class="cc-code">WHERE</code> condition TRUE for every row!' }
+        ],
+        consoleType: 'and_or',
+        notes: [
+            '<strong>Truth Table Rule:</strong> <code>TRUE AND FALSE = FALSE</code> (login rejected), whereas <code>FALSE OR TRUE = TRUE</code> (row returned!).',
+            '<strong>Operator Precedence (AND Before OR):</strong> Just like multiplication happens before addition in math, SQL evaluates <code>AND</code> before <code>OR</code> unless grouped with parentheses <code>( )</code>.',
+            '<strong>What Is a Tautology?</strong> Any comparison that is unconditionally True for every row—such as <code>1=1</code>, <code>\'a\'=\'a\'</code>, or <code>2&gt;1</code>.'
+        ],
+        promptQ: 'In WHERE username = \'\' OR 1=1, the left side (username = \'\') is FALSE for all 4 rows. Why does the database still return all 4 rows?',
+        promptA: '<strong>Because the OR operator only requires ONE side to be TRUE. Since 1=1 is always TRUE on every row, FALSE OR TRUE evaluates to TRUE for all 4 rows.</strong>'
+    },
+    {
+        num: '06',
+        group: 'Part 2 · SQL Clauses',
+        shortTitle: 'ORDER BY, LIMIT & --',
+        moduleTag: 'Module 06 · SQL Clauses Part 4',
+        title: 'Controlling Output: ORDER BY, LIMIT & Comments (--)',
+        lead: 'Three final SQL building blocks complete your toolkit before entering exploitation: <strong>ORDER BY</strong> (sorting and counting columns), <strong>LIMIT</strong> (picking the top row), and <strong>-- / # Comments</strong> (slicing off the remainder of a query).',
+        cards: [
+            { tag: 'Sorting & Probing', title: 'ORDER BY 1, 2, 3...', body: 'Sorts results by column name or <strong>column number</strong>. Pentesters test <code class="cc-code">ORDER BY 1, 2, 3...</code> until an error reveals the column count!' },
+            { tag: 'Row Cap', title: 'LIMIT 1', body: 'Restricts output to only the first matching row (or combine with <code class="cc-code">OFFSET</code> to step through rows one by one).' },
+            { tag: 'Query Scissors', title: 'Comments (-- and #)', body: '<code class="cc-code">--</code> (or <code class="cc-code">#</code> in MySQL) tells the database: <em>"Ignore everything written after this point on the line!"</em>' }
+        ],
+        consoleType: 'order_limit_comment',
+        notes: [
+            '<strong>Column Enumeration via <code>ORDER BY</code>:</strong> If <code>ORDER BY 4</code> works but <code>ORDER BY 5</code> throws an error, the table query has <strong>exactly 4 columns</strong>.',
+            '<strong>Comment Syntax by Database Engine:</strong> PostgreSQL, SQLite, Oracle, and MSSQL use <code>--</code>. MySQL requires a trailing space (<code>-- </code>) or uses <code>#</code>.',
+            '<strong>Why Comments Are Essential in SQLi:</strong> Injecting <code>--</code> deletes the developer\'s trailing code (such as <code>AND password = \'...\'</code>) and prevents unclosed-quote syntax errors.'
+        ],
+        promptQ: 'When testing a search bar, ORDER BY 3 works normally, but ORDER BY 4 causes a database error. What did you just learn?',
+        promptA: '<strong>The original SELECT query retrieves exactly 3 columns—which is the exact number of columns you will need in your UNION SELECT payload.</strong>'
+    },
+    {
+        num: '07',
+        group: 'Part 3 · SQL Injection',
+        shortTitle: 'Behind the Login Form',
+        moduleTag: 'Module 07 · Application Logic',
+        title: 'How a Backend Actually Validates a Login Form',
+        lead: 'Beginners often assume the database has a special "verify password" command. In reality, <strong>the database simply filters rows using WHERE</strong>, and the backend application checks whether <strong>at least 1 row came back</strong> (<code>if rows.length &gt; 0</code>).',
+        cards: [
+            { tag: 'Step 1 · The Query', title: 'WHERE user AND pass', body: 'The backend runs: <code class="cc-code">SELECT * FROM users WHERE username = \'INPUT\' AND password = \'INPUT\'</code>.' },
+            { tag: 'Step 2 · The Check', title: 'if (rows.length > 0)', body: 'If 0 rows return, login fails. If 1 or more rows return, the backend assumes the credentials matched!' },
+            { tag: 'Step 3 · The Session', title: 'loginAs(rows[0])', body: 'The backend logs the user into the <strong>first returned row (<code class="cc-code">rows[0]</code>)</strong>—which is Row #1 (<code class="cc-code">admin</code>) when all rows return!' }
+        ],
+        consoleType: 'login_backend',
+        notes: [
+            '<strong>Why Login Bypass Works Without Knowing the Password:</strong> The backend code does not re-check the password in JavaScript/Python—it trusts that a non-empty database result means the <code>WHERE</code> clause succeeded.',
+            '<strong>Targeted vs. Blanket Bypass:</strong> <code>\' OR 1=1 --</code> returns all rows and logs in as <code>rows[0]</code> (admin). What if you want to log in as <code>charlie</code> (Row #4)? Inject <code>charlie\' --</code> so only Charlie\'s row matches!'
+        ],
+        promptQ: 'If an attacker injects \' OR 1=1 -- into a login form and all 4 rows of the users table are returned, which account does the attacker log into and why?',
+        promptA: '<strong>The admin account (Row #1), because the backend login handler reads the first returned record (rows[0]), and admin is at index 0.</strong>'
+    },
+    {
+        num: '08',
+        group: 'Part 3 · SQL Injection',
+        shortTitle: 'The Quote Breakout',
+        moduleTag: 'Module 08 · The Core Vulnerability',
+        title: 'How SQL Injection Happens: The Quote Breakout',
+        lead: 'SQL Injection is not a flaw in the database—it is a flaw in <strong>how the backend application builds the SQL string</strong>. When a developer glues user input directly inside single quotes using <strong>string concatenation</strong>, a single quote (<code>\'</code>) lets the user escape out of data mode into command mode.',
+        cards: [
+            { tag: 'The Root Flaw', title: 'String Concatenation', body: 'Developer writes: <code class="cc-code">"SELECT * FROM users WHERE username = \'" + input + "\'"</code>.' },
+            { tag: 'The Escape Character', title: 'The Single Quote (\')', body: 'Typing <code class="cc-code">\'</code> pairs up with the developer\'s opening quote, closing the data string early!' },
+            { tag: 'Code Injection', title: 'Commands + Comment', body: 'Everything after <code class="cc-code">\'</code> is executed as real SQL syntax, and <code class="cc-code">--</code> neutralizes the leftover closing quote.' }
+        ],
+        consoleType: 'quote_xray',
+        notes: [
+            '<strong>How to Test Any Input for SQLi:</strong> Type a single quote <code>\'</code>. If the server crashes with a 500 error or SQL syntax warning, it proves your quote broke the query structure!',
+            '<strong>Why Two Quotes (<code>\'\'</code>) Don\'t Crash:</strong> An odd number of quotes leaves an unclosed string literal (syntax error). Repairing the syntax with <code>--</code> or balancing the quote confirms the vulnerability.'
+        ],
+        promptQ: 'Why does typing a single quote (\') into a vulnerable search box cause a syntax error, whereas typing admin\' -- does not crash?',
+        promptA: '<strong>A lone single quote leaves the developer\'s closing quote dangling as an unclosed string, whereas adding -- comments out the developer\'s trailing quote so the SQL syntax stays valid.</strong>'
+    },
+    {
+        num: '09',
+        group: 'Part 3 · SQL Injection',
+        shortTitle: 'In-Band, Blind & OOB',
+        moduleTag: 'Module 09 · Lab Techniques',
+        title: 'The 3 Types of SQLi: In-Band, Blind & Out-of-Band',
+        lead: 'Every SQL injection starts with the same quote breakout, but <strong>different web pages return different amounts of information</strong>. Pentesters classify SQLi into three categories based on how you read the stolen data back from the server.',
+        cards: [
+            { tag: '1 · Direct Output', title: 'In-Band SQLi (Classic)', body: 'The webpage prints results or errors directly on screen. Uses <strong>UNION SELECT</strong> or <strong>Error-Based</strong> extraction.' },
+            { tag: '2 · No Direct Output', title: 'Blind / Inferential SQLi', body: 'The page hides all data and errors. You ask True/False questions using <strong>Boolean page differences</strong> or <strong>SLEEP() time delays</strong>.' },
+            { tag: '3 · External Channel', title: 'Out-of-Band (OOB) SQLi', body: 'When responses are completely asynchronous, you force the database to send stolen data via an external DNS/HTTP lookup.' }
+        ],
+        consoleType: 'sqli_types',
+        notes: [
+            '<strong>In-Band UNION Checklist:</strong> (1) Find column count with <code>ORDER BY 1, 2, 3...</code> (2) Find text-compatible columns with <code>UNION SELECT NULL, \'a\', NULL</code> (3) Extract from <code>users</code> or <code>information_schema.tables</code>.',
+            '<strong>Blind SQLi Checklist:</strong> Test if the page changes between <code>\' AND 1=1--</code> (True) and <code>\' AND 1=2--</code> (False). If it does, extract characters with <code>SUBSTR(password, 1, 1) = \'a\'</code>. If not, test <code>SLEEP(3)</code> / <code>pg_sleep(3)</code>.'
+        ],
+        promptQ: 'If a vulnerable webpage never displays database rows AND never shows error messages, how can you still extract the admin password?',
+        promptA: '<strong>Using Blind (Inferential) SQLi—asking the database True/False questions one character at a time (via SUBSTR) and observing either a Boolean page difference or a Time-Based SLEEP() delay.</strong>'
+    },
+    {
+        num: '10',
+        group: 'Part 3 · SQL Injection',
+        shortTitle: 'Prepared Statements',
+        moduleTag: 'Module 10 · Defense & Lab Prep',
+        title: 'Permanent Prevention: Parameterized Queries',
+        lead: 'Why not just block the word <code>OR</code> or strip quotes? Because legitimate users have names like <em>O\'Connor</em>, and attackers easily bypass word filters. The permanent cure is <strong>Parameterized Queries (Prepared Statements)</strong>, which keep SQL code and user data strictly separate.',
+        cards: [
+            { tag: 'Step 1 · Compile Plan', title: 'Lock the SQL Structure', body: 'The database compiles <code class="cc-code">SELECT * FROM users WHERE username = ?</code> first. The logic tree is now locked.' },
+            { tag: 'Step 2 · Bind Data', title: 'Insert Literal Value', body: 'User input is placed into the <code class="cc-code">?</code> parameter slot strictly as inert text—it can never become SQL commands.' },
+            { tag: 'Defense in Depth', title: 'Least Privilege & Allow-Lists', body: 'Combine Prepared Statements with least-privilege DB accounts, generic errors, and allow-lists for column names.' }
+        ],
+        consoleType: 'defense',
+        notes: [
+            '<strong>Why Parameterized Queries Are Unbreakable:</strong> Even if a user types <code>admin\' OR 1=1 --</code>, a Prepared Statement simply searches the table for a user whose literal 16-character username is <code>"admin\' OR 1=1 --"</code>.',
+            '<strong>You Have Completed All Lab Prerequisites!</strong> You now understand database anatomy, every core SQL clause, backend login validation, quote breakouts, In-Band/Blind/OOB techniques, and remediation.'
+        ],
+        promptQ: 'Why does a Parameterized Query (?) completely neutralize \' OR 1=1 -- without needing to delete quotes from the user\'s input?',
+        promptA: '<strong>Because the database compiles and locks the SQL command structure BEFORE the parameter is bound, so the entire input string is treated strictly as a literal data value inside the ? slot.</strong>'
+    }
+];
+
+let currentIdx = 0;
+const visitedLessons = new Set([0]);
+
+function esc(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderSyllabus() {
+    const container = document.getElementById('syllabusContainer');
+    let html = '';
+    let lastGroup = '';
+
+    LESSONS.forEach((les, i) => {
+        if (les.group !== lastGroup) {
+            html += '<div class="sn-group">' + esc(les.group) + '</div>';
+            lastGroup = les.group;
+        }
+        const isCurrent = i === currentIdx;
+        const isVisited = visitedLessons.has(i);
+        html += '<button class="sn-item ' + (isCurrent ? 'active ' : '') + (isVisited ? 'visited' : '') + '" onclick="loadLesson(' + i + ')">' +
+            '<span class="sn-item-left"><span class="sn-num">' + les.num + '</span><span>' + esc(les.shortTitle) + '</span></span>' +
+            '<span class="sn-check">✓</span>' +
+            '</button>';
+    });
+
+    container.innerHTML = html;
+    document.getElementById('completedCountLabel').textContent = visitedLessons.size + ' / ' + LESSONS.length + ' Viewed';
+}
+
+function loadLesson(idx) {
+    currentIdx = Math.max(0, Math.min(idx, LESSONS.length - 1));
+    visitedLessons.add(currentIdx);
+    const les = LESSONS[currentIdx];
+
+    // Header & Progress
+    document.getElementById('topProgressText').textContent = 'Lesson ' + les.num + ' / 10';
+    document.getElementById('topProgressFill').style.width = ((currentIdx + 1) * 10) + '%';
+    document.getElementById('stageModuleTag').textContent = les.moduleTag;
+    document.getElementById('stageStepCount').textContent = 'Lesson ' + les.num + ' of 10';
+    document.getElementById('stageTitle').textContent = les.title;
+    document.getElementById('stageLead').innerHTML = les.lead;
+
+    // Block 1: 3 Cards
+    document.getElementById('stageConceptCards').innerHTML = les.cards.map(c =>
+        '<div class="concept-card">' +
+            '<span class="cc-tag">' + esc(c.tag) + '</span>' +
+            '<div class="cc-title">' + esc(c.title) + '</div>' +
+            '<p class="cc-body">' + c.body + '</p>' +
+        '</div>'
+    ).join('');
+
+    // Block 2: Interactive Console per Lesson
+    renderConsoleForLesson(les.consoleType);
+
+    // Block 3: Student Reference Notes & Prompt
+    document.getElementById('stageNoteBadge').textContent = 'Lesson ' + les.num;
+    document.getElementById('stageNotesList').innerHTML = les.notes.map(n => '<li>' + n + '</li>').join('');
+    document.getElementById('stagePromptQ').textContent = les.promptQ;
+    const ansEl = document.getElementById('stagePromptA');
+    ansEl.innerHTML = les.promptA;
+    ansEl.classList.remove('show');
+    document.getElementById('stagePromptBtn').textContent = 'Reveal Answer';
+
+    // Footer Buttons
+    document.getElementById('prevLessonBtn').disabled = currentIdx === 0;
+    document.getElementById('nextLessonBtn').disabled = currentIdx === LESSONS.length - 1;
+
+    renderSyllabus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function stepLesson(delta) {
+    loadLesson(currentIdx + delta);
+}
+
+function togglePromptAnswer() {
+    const ansEl = document.getElementById('stagePromptA');
+    ansEl.classList.toggle('show');
+    document.getElementById('stagePromptBtn').textContent = ansEl.classList.contains('show') ? 'Hide Answer' : 'Reveal Answer';
+}
+
+function toggleCheatModal(show) {
+    const modal = document.getElementById('cheatModal');
+    modal.classList.toggle('open', show);
+}
+
+/* ================= CUSTOM CONSOLES FOR ALL 10 LESSONS ================= */
+
+function renderConsoleForLesson(type) {
+    const box = document.getElementById('stageConsoleBox');
+
+    if (type === 'architecture') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>3-Tier Request Tracer</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runArchDemo('search', this)">1. Search "Hardware"</button>
+                    <button class="cb-btn" onclick="runArchDemo('login', this)">2. Login as "alice"</button>
+                    <button class="cb-btn" onclick="runArchDemo('sqli', this)">3. Inject ' OR 1=1 --</button>
+                </div>
+            </div>
+            <div class="tier-grid" id="archTierGrid"></div>
+            <div class="cb-explain" id="archExplain"></div>
+        `;
+        runArchDemo('search', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'anatomy') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Database Schema Inspector — Table: users</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runAnatomyDemo('pk', this)">1. Primary Key (id = 1)</button>
+                    <button class="cb-btn" onclick="runAnatomyDemo('cols', this)">2. Columns &amp; Types</button>
+                    <button class="cb-btn" onclick="runAnatomyDemo('row2', this)">3. Row #2 (Alice Record)</button>
+                </div>
+            </div>
+            <div class="cb-table-wrap" id="anatomyTableWrap"></div>
+            <div class="cb-explain" id="anatomyExplain"></div>
+        `;
+        runAnatomyDemo('pk', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'select_from') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Interactive SELECT &amp; FROM Projector</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runSelectDemo('all_users', this)">1. SELECT * FROM users</button>
+                    <button class="cb-btn" onclick="runSelectDemo('two_cols', this)">2. SELECT username, role FROM users</button>
+                    <button class="cb-btn" onclick="runSelectDemo('products', this)">3. SELECT name, price FROM products</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="selectSqlText"></div>
+                <span class="cb-status" id="selectStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="selectTableWrap"></div>
+            <div class="cb-explain" id="selectExplain"></div>
+        `;
+        runSelectDemo('all_users', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'where_quotes') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Row-by-Row WHERE &amp; Quote Evaluator</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runWhereDemo('alice', this)">1. WHERE username = 'alice'</button>
+                    <button class="cb-btn" onclick="runWhereDemo('student', this)">2. WHERE role = 'student'</button>
+                    <button class="cb-btn" onclick="runWhereDemo('id1', this)">3. WHERE id = 1 (Numeric)</button>
+                    <button class="cb-btn" onclick="runWhereDemo('no_quotes', this)">4. Missing Quotes Error</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="whereSqlText"></div>
+                <span class="cb-status" id="whereStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="whereTableWrap"></div>
+            <div class="cb-explain" id="whereExplain"></div>
+        `;
+        runWhereDemo('alice', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'and_or') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Boolean Logic &amp; Tautology Evaluator</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runLogicDemo('and_ok', this)">1. AND (Both True)</button>
+                    <button class="cb-btn" onclick="runLogicDemo('and_fail', this)">2. AND (One False)</button>
+                    <button class="cb-btn" onclick="runLogicDemo('or_two', this)">3. OR (Either True)</button>
+                    <button class="cb-btn" onclick="runLogicDemo('tautology', this)">4. OR 1=1 (Tautology)</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="logicSqlText"></div>
+                <span class="cb-status" id="logicStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="logicTableWrap"></div>
+            <div class="cb-explain" id="logicExplain"></div>
+        `;
+        runLogicDemo('and_ok', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'order_limit_comment') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>ORDER BY Column Prober &amp; Comment (--) Scissors</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runControlDemo('order_desc', this)">1. ORDER BY id DESC</button>
+                    <button class="cb-btn" onclick="runControlDemo('limit_1', this)">2. LIMIT 1</button>
+                    <button class="cb-btn" onclick="runControlDemo('order_4', this)">3. ORDER BY 4 (4th Col OK)</button>
+                    <button class="cb-btn" onclick="runControlDemo('order_5', this)">4. ORDER BY 5 (5th Col Error!)</button>
+                    <button class="cb-btn" onclick="runControlDemo('comment', this)">5. -- Comment Scissors</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="ctrlSqlText"></div>
+                <span class="cb-status" id="ctrlStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="ctrlTableWrap"></div>
+            <div class="cb-explain" id="ctrlExplain"></div>
+        `;
+        runControlDemo('order_desc', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'login_backend') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Behind-the-Login-Form Simulator (if rows.length &gt; 0)</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runLoginSim('alice_ok', this)">1. Valid Login (alice)</button>
+                    <button class="cb-btn" onclick="runLoginSim('alice_bad', this)">2. Wrong Password</button>
+                    <button class="cb-btn" onclick="runLoginSim('admin_comment', this)">3. Inject: admin' --</button>
+                    <button class="cb-btn" onclick="runLoginSim('or_bypass', this)">4. Inject: ' OR 1=1 --</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="loginSqlText"></div>
+                <span class="cb-status" id="loginStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="loginTableWrap"></div>
+            <div class="cb-explain" id="loginExplain"></div>
+        `;
+        runLoginSim('alice_ok', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'quote_xray') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Live Quote-Breakout Token Colorizer</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="setXrayInput('alice', this)">1. Safe: alice</button>
+                    <button class="cb-btn" onclick="setXrayInput(&quot;alice'&quot;, this)">2. Single Quote: alice'</button>
+                    <button class="cb-btn" onclick="setXrayInput(&quot;admin' --&quot;, this)">3. Comment: admin' --</button>
+                    <button class="cb-btn" onclick="setXrayInput(&quot;' OR 1=1 --&quot;, this)">4. Tautology: ' OR 1=1 --</button>
+                </div>
+            </div>
+            <div class="cb-input-row">
+                <label class="cb-input-label" for="liveXrayField">Type Username Input:</label>
+                <input id="liveXrayField" class="cb-input" type="text" value="alice" oninput="updateLiveXray()">
+            </div>
+            <div class="cb-query-bar">
+                <div id="xraySqlText"></div>
+                <span class="cb-status" id="xrayStatusBadge"></span>
+            </div>
+            <div class="cb-explain" id="xrayExplain"></div>
+        `;
+        updateLiveXray();
+    }
+    else if (type === 'sqli_types') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Multi-Technique SQLi Lab Simulator</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runTypesSim('union', this)">1. In-Band: UNION SELECT</button>
+                    <button class="cb-btn" onclick="runTypesSim('error', this)">2. In-Band: Error Leak</button>
+                    <button class="cb-btn" onclick="runTypesSim('bool', this)">3. Blind: Boolean SUBSTR</button>
+                    <button class="cb-btn" onclick="runTypesSim('time', this)">4. Blind: Time SLEEP(3)</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="typesSqlText"></div>
+                <span class="cb-status" id="typesStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="typesTableWrap"></div>
+            <div class="cb-explain" id="typesExplain"></div>
+        `;
+        runTypesSim('union', box.querySelector('.cb-btn'));
+    }
+    else if (type === 'defense') {
+        box.innerHTML = `
+            <div class="cb-top">
+                <div class="cb-title"><span class="cb-dot"></span><span>Concatenation vs. Parameterized Query (?) Verifier</span></div>
+                <div class="cb-presets">
+                    <button class="cb-btn active" onclick="runDefenseSim('vuln', this)">1. ❌ Vulnerable Concatenation</button>
+                    <button class="cb-btn" onclick="runDefenseSim('prep', this)">2. ✅ Parameterized Query (?)</button>
+                </div>
+            </div>
+            <div class="cb-query-bar">
+                <div id="defSqlText"></div>
+                <span class="cb-status" id="defStatusBadge"></span>
+            </div>
+            <div class="cb-table-wrap" id="defTableWrap"></div>
+            <div class="cb-explain" id="defExplain"></div>
+        `;
+        runDefenseSim('vuln', box.querySelector('.cb-btn'));
+    }
+}
+
+function activateBtn(btn) {
+    if (!btn) return;
+    btn.parentElement.querySelectorAll('.cb-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+/* --- Lesson 01: Architecture Demo --- */
+function runArchDemo(mode, btn) {
+    activateBtn(btn);
+    const grid = document.getElementById('archTierGrid');
+    const exp = document.getElementById('archExplain');
+    const data = {
+        search: {
+            t1: 'GET /shop?category=hardware',
+            t1d: 'Browser sends category word in URL.',
+            t2: "SELECT * FROM products WHERE category = 'hardware';",
+            t2d: 'Waiter places word inside SQL query slip.',
+            t3: '2 rows returned (Laptop, YubiKey)',
+            t3d: 'Storeroom returns matching products.',
+            exp: '<strong>Normal Flow:</strong> Your browser sends plain text (<code>hardware</code>) to the Backend Server, which builds a SQL query and asks the Database for matching rows.'
+        },
+        login: {
+            t1: 'POST /login { user: "alice", pass: "cat123" }',
+            t1d: 'Browser submits login form fields.',
+            t2: "SELECT * FROM users WHERE username = 'alice' AND password = 'cat123';",
+            t2d: 'Backend builds a WHERE filter checking both fields.',
+            t3: '1 row returned (id: 2, alice)',
+            t3d: 'Database finds Row #2 and hands it to Backend.',
+            exp: '<strong>Normal Login:</strong> Because 1 matching row returned from the Storeroom, the Backend Server creates a logged-in session for Alice.'
+        },
+        sqli: {
+            t1: 'POST /login { user: "\' OR 1=1 --", pass: "anything" }',
+            t1d: 'Attacker types SQL syntax into the username box.',
+            t2: "SELECT * FROM users WHERE username = '' OR 1=1 --' AND password = '...';",
+            t2d: 'Waiter blindly glues attacker text onto the SQL slip!',
+            t3: 'All 4 user rows returned! (Row #1 = admin)',
+            t3d: 'Database obeys the forged OR 1=1 instruction.',
+            exp: '<strong>The Golden Rule in Action:</strong> Because the Backend Server glued the user\'s input directly into the SQL command string, the Database could not tell where the developer\'s code ended and the attacker\'s input began!'
+        }
+    }[mode];
+
+    grid.innerHTML = `
+        <div class="tier-card">
+            <span class="tc-step">Tier 1 · Browser (Customer)</span>
+            <div class="tc-name">HTTP Request Sent</div>
+            <div class="tc-code">${esc(data.t1)}</div>
+            <div class="tc-desc">${data.t1d}</div>
+        </div>
+        <div class="tier-card">
+            <span class="tc-step">Tier 2 · Backend (Waiter)</span>
+            <div class="tc-name">SQL Order Slip Built</div>
+            <div class="tc-code">${esc(data.t2)}</div>
+            <div class="tc-desc">${data.t2d}</div>
+        </div>
+        <div class="tier-card">
+            <span class="tc-step">Tier 3 · Database (Storeroom)</span>
+            <div class="tc-name">Query Result</div>
+            <div class="tc-code">${esc(data.t3)}</div>
+            <div class="tc-desc">${data.t3d}</div>
+        </div>
+    `;
+    exp.innerHTML = data.exp;
+}
+
+/* --- Lesson 02: Database Anatomy Demo --- */
+function runAnatomyDemo(mode, btn) {
+    activateBtn(btn);
+    const wrap = document.getElementById('anatomyTableWrap');
+    const exp = document.getElementById('anatomyExplain');
+
+    wrap.innerHTML = `
+        <table class="cb-table">
+            <thead>
+                <tr>
+                    <th class="${mode === 'pk' || mode === 'cols' ? 'hl-cell' : ''}">🔑 id (INT · PK)</th>
+                    <th class="${mode === 'cols' ? 'hl-cell' : ''}">username (TEXT)</th>
+                    <th class="${mode === 'cols' ? 'hl-cell' : ''}">password (TEXT)</th>
+                    <th class="${mode === 'cols' ? 'hl-cell' : ''}">role (TEXT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${USERS.map((u, i) => `
+                    <tr class="${(mode === 'pk' && i === 0) || (mode === 'row2' && i === 1) ? 'matched' : ''}">
+                        <td class="${mode === 'pk' ? 'hl-cell' : ''}">${u.id}</td>
+                        <td><strong>${u.username}</strong></td>
+                        <td>${u.password}</td>
+                        <td>${u.role}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+
+    if (mode === 'pk') {
+        exp.innerHTML = '<strong>Primary Key (<code>id</code>):</strong> Every row has a unique integer ID. Notice that <strong>Row #1 (<code>id = 1</code>) is the <code>admin</code> account</strong>—when a SQL injection returns the whole table, Row #1 is always first in line!';
+    } else if (mode === 'cols') {
+        exp.innerHTML = '<strong>4 Columns &amp; Data Types:</strong> This table has <strong>4 columns</strong>: 1 integer column (<code>id</code>) and 3 text columns (<code>username, password, role</code>). In a <code>UNION</code> attack, you must match this exact column count!';
+    } else {
+        exp.innerHTML = '<strong>Row #2 (Complete Record):</strong> A row holds all attributes belonging to one single user (Alice\'s ID, username, password, and student role).';
+    }
+}
+
+/* --- Lesson 03: SELECT & FROM Demo --- */
+function runSelectDemo(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('selectSqlText');
+    const badge = document.getElementById('selectStatusBadge');
+    const wrap = document.getElementById('selectTableWrap');
+    const exp = document.getElementById('selectExplain');
+
+    if (mode === 'all_users') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users;';
+        badge.textContent = '4 columns · 4 rows';
+        wrap.innerHTML = renderSimpleTable(['id', 'username', 'password', 'role'], USERS);
+        exp.innerHTML = '<strong>Wildcard (<code>SELECT *</code>):</strong> Returns every column and every row from the <code>users</code> table.';
+    } else if (mode === 'two_cols') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> username, role <span class="sql-kw">FROM</span> users;';
+        badge.textContent = '2 columns · 4 rows';
+        wrap.innerHTML = renderSimpleTable(['username', 'role'], USERS);
+        exp.innerHTML = '<strong>Projection (Specific Columns):</strong> Only the 2 requested columns (<code>username, role</code>) are returned; <code>id</code> and <code>password</code> are hidden.';
+    } else {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> name, price <span class="sql-kw">FROM</span> products;';
+        badge.textContent = '2 columns · 4 rows';
+        wrap.innerHTML = renderSimpleTable(['name', 'price'], PRODUCTS);
+        exp.innerHTML = '<strong>Switching Tables (<code>FROM products</code>):</strong> Changing the table name after <code>FROM</code> opens the store catalog instead of user accounts.';
+    }
+}
+
+function renderSimpleTable(cols, data) {
+    return `<table class="cb-table"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead><tbody>` +
+        data.map(r => `<tr class="matched">${cols.map(c => `<td>${esc(r[c])}</td>`).join('')}</tr>`).join('') +
+        `</tbody></table>`;
+}
+
+/* --- Lesson 04: WHERE & Single Quotes Demo --- */
+function runWhereDemo(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('whereSqlText');
+    const badge = document.getElementById('whereStatusBadge');
+    const wrap = document.getElementById('whereTableWrap');
+    const exp = document.getElementById('whereExplain');
+
+    if (mode === 'no_quotes') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-inj">alice</span>;';
+        badge.textContent = 'SQL Syntax Error';
+        badge.className = 'cb-status danger';
+        wrap.innerHTML = `<div style="padding:14px;color:var(--danger);font-family:'JetBrains Mono',monospace;font-size:13px">ERROR: column "alice" does not exist. Did you mean the string literal 'alice'?</div>`;
+        exp.innerHTML = '<strong>Why It Crashed:</strong> Without single quotes around <code>\'alice\'</code>, the database thought <code>alice</code> was the name of another column! Text strings always require single quotes.';
+        return;
+    }
+
+    badge.className = 'cb-status';
+    let count = 0;
+    const rowsHtml = USERS.map(u => {
+        let m = false, label = '';
+        if (mode === 'alice') {
+            m = u.username === 'alice';
+            label = m ? "TRUE ('alice' = 'alice')" : "FALSE ('" + u.username + "' != 'alice')";
+        } else if (mode === 'student') {
+            m = u.role === 'student';
+            label = m ? "TRUE ('student' = 'student')" : "FALSE ('" + u.role + "' != 'student')";
+        } else if (mode === 'id1') {
+            m = u.id === 1;
+            label = m ? 'TRUE (1 = 1)' : 'FALSE (' + u.id + ' != 1)';
+        }
+        if (m) count++;
+        return `<tr class="${m ? 'matched' : 'filtered'}"><td>${u.id}</td><td><strong>${u.username}</strong></td><td>${u.password}</td><td>${u.role}</td><td><span class="eval-badge ${m ? 'eval-true' : 'eval-false'}">${m ? '✓ ' : '✕ '}${label}</span></td></tr>`;
+    }).join('');
+
+    wrap.innerHTML = `<table class="cb-table"><thead><tr><th>id</th><th>username</th><th>password</th><th>role</th><th>Row Evaluation</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+    badge.textContent = count + ' of 4 rows matched';
+
+    if (mode === 'alice') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'alice\'</span>;';
+        exp.innerHTML = '<strong>String Filter:</strong> The database checked all 4 rows and returned only Row #2 where <code>username</code> matched <code>\'alice\'</code>.';
+    } else if (mode === 'student') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> role = <span class="sql-str">\'student\'</span>;';
+        exp.innerHTML = '<strong>Multiple Matches:</strong> Both Row #2 (alice) and Row #3 (bob) have <code>role = \'student\'</code>, so 2 rows are returned.';
+    } else {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> id = <span class="sql-num">1</span>;';
+        exp.innerHTML = '<strong>Numeric Filter:</strong> Numbers are written without quotes. Only Row #1 (<code>admin</code>) matches <code>id = 1</code>.';
+    }
+}
+
+/* --- Lesson 05: AND, OR & Tautology Demo --- */
+function runLogicDemo(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('logicSqlText');
+    const badge = document.getElementById('logicStatusBadge');
+    const wrap = document.getElementById('logicTableWrap');
+    const exp = document.getElementById('logicExplain');
+
+    let count = 0;
+    const rowsHtml = USERS.map(u => {
+        let m = false, label = '';
+        if (mode === 'and_ok') {
+            const c1 = u.username === 'alice', c2 = u.password === 'cat123';
+            m = c1 && c2;
+            label = (c1 ? 'TRUE' : 'FALSE') + ' AND ' + (c2 ? 'TRUE' : 'FALSE') + ' → ' + (m ? 'TRUE' : 'FALSE');
+        } else if (mode === 'and_fail') {
+            const c1 = u.username === 'alice';
+            m = false;
+            label = (c1 ? 'TRUE' : 'FALSE') + ' AND FALSE → FALSE';
+        } else if (mode === 'or_two') {
+            const c1 = u.username === 'alice', c2 = u.role === 'admin';
+            m = c1 || c2;
+            label = (c1 ? 'TRUE' : 'FALSE') + ' OR ' + (c2 ? 'TRUE' : 'FALSE') + ' → ' + (m ? 'TRUE' : 'FALSE');
+        } else {
+            m = true;
+            label = 'FALSE OR TRUE (1=1) → TRUE!';
+        }
+        if (m) count++;
+        return `<tr class="${m ? 'matched' : 'filtered'}"><td>${u.id}</td><td><strong>${u.username}</strong></td><td>${u.password}</td><td>${u.role}</td><td><span class="eval-badge ${m ? 'eval-true' : 'eval-false'}">${m ? '✓ ' : '✕ '}${label}</span></td></tr>`;
+    }).join('');
+
+    wrap.innerHTML = `<table class="cb-table"><thead><tr><th>id</th><th>username</th><th>password</th><th>role</th><th>Boolean Evaluation</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+    badge.textContent = count + ' of 4 rows matched';
+    badge.className = count > 0 ? 'cb-status' : 'cb-status warn';
+
+    if (mode === 'and_ok') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'alice\'</span> <span class="sql-kw">AND</span> password = <span class="sql-str">\'cat123\'</span>;';
+        exp.innerHTML = '<strong>Both Sides TRUE:</strong> Row #2 has both <code>username = \'alice\'</code> AND <code>password = \'cat123\'</code>, so 1 row is returned.';
+    } else if (mode === 'and_fail') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'alice\'</span> <span class="sql-kw">AND</span> password = <span class="sql-str">\'wrong\'</span>;';
+        exp.innerHTML = '<strong>Strict AND Rejection:</strong> Even though Row #2 matched the username, the password side was FALSE—so <code>TRUE AND FALSE</code> became <strong>FALSE</strong> (0 rows returned).';
+    } else if (mode === 'or_two') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'alice\'</span> <span class="sql-kw">OR</span> role = <span class="sql-str">\'admin\'</span>;';
+        exp.innerHTML = '<strong>Permissive OR:</strong> Row #1 matched the right side (<code>role = \'admin\'</code>) and Row #2 matched the left side (<code>username = \'alice\'</code>), returning both rows!';
+    } else {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'\'</span> <span class="sql-inj">OR 1=1</span>;';
+        exp.innerHTML = '<strong>The Tautology Trick (<code>OR 1=1</code>):</strong> Because <code>1=1</code> is always TRUE, <code>FALSE OR TRUE</code> evaluates to <strong>TRUE on every single row in the database!</strong>';
+    }
+}
+
+/* --- Lesson 06: ORDER BY, LIMIT & Comments Demo --- */
+function runControlDemo(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('ctrlSqlText');
+    const badge = document.getElementById('ctrlStatusBadge');
+    const wrap = document.getElementById('ctrlTableWrap');
+    const exp = document.getElementById('ctrlExplain');
+
+    badge.className = 'cb-status';
+
+    if (mode === 'order_5') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-inj">ORDER BY 5</span>;';
+        badge.textContent = 'Column Count Error!';
+        badge.className = 'cb-status danger';
+        wrap.innerHTML = `<div style="padding:14px;color:var(--danger);font-family:'JetBrains Mono',monospace;font-size:13px">ERROR: ORDER BY position 5 is not in select list (table has only 4 columns)</div>`;
+        exp.innerHTML = '<strong>Column Count Discovered!</strong> Because <code>ORDER BY 4</code> worked and <code>ORDER BY 5</code> failed, you now know with 100% certainty that the query selects <strong>4 columns</strong>!';
+        return;
+    }
+
+    let list = [...USERS];
+    if (mode === 'order_desc') list.reverse();
+    if (mode === 'order_4') list.sort((a, b) => a.role.localeCompare(b.role));
+
+    const rowsHtml = list.map((u, idx) => {
+        let m = true, label = 'Included';
+        if (mode === 'limit_1') {
+            m = idx === 0;
+            label = m ? 'Kept by LIMIT 1' : 'Stopped after Row #1';
+        } else if (mode === 'comment') {
+            m = u.username === 'admin';
+            label = m ? 'TRUE (Password check cut off by --!)' : 'FALSE';
+        } else if (mode === 'order_4') {
+            label = 'Sorted by Col #4 (role)';
+        } else {
+            label = 'Sorted by id DESC';
+        }
+        return `<tr class="${m ? 'matched' : 'filtered'}"><td>${u.id}</td><td><strong>${u.username}</strong></td><td>${u.password}</td><td>${u.role}</td><td><span class="eval-badge ${m ? 'eval-true' : 'eval-false'}">${m ? '✓ ' : '✕ '}${label}</span></td></tr>`;
+    }).join('');
+
+    wrap.innerHTML = `<table class="cb-table"><thead><tr><th>1: id</th><th>2: username</th><th>3: password</th><th>4: role</th><th>Clause Effect</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+
+    if (mode === 'order_desc') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">ORDER BY</span> id <span class="sql-kw">DESC</span>;';
+        badge.textContent = 'Sorted 4 → 1';
+        exp.innerHTML = '<strong>Descending Sort:</strong> Reverses the row order so <code>id = 4</code> comes first.';
+    } else if (mode === 'limit_1') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">LIMIT</span> <span class="sql-num">1</span>;';
+        badge.textContent = '1 row returned';
+        exp.innerHTML = '<strong>Top Row Only:</strong> Stops scanning after the first row (<code>id = 1, admin</code>).';
+    } else if (mode === 'order_4') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">ORDER BY</span> <span class="sql-num">4</span>;';
+        badge.textContent = '4th Col Exists ✓';
+        exp.innerHTML = '<strong>Probing Column #4:</strong> Sorts by the 4th column (<code>role</code>). Because it succeeded without error, the table has at least 4 columns.';
+    } else {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'admin\'</span> <span class="sql-comment">-- AND password = \'wrong\'</span>';
+        badge.textContent = 'Password Check Erased!';
+        exp.innerHTML = '<strong>The Comment Scissors (<code>--</code>):</strong> Everything after <code>--</code> is ignored by the database engine, turning a failed login into an instant <code>admin</code> match!';
+    }
+}
+
+/* --- Lesson 07: Login Backend Simulator --- */
+function runLoginSim(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('loginSqlText');
+    const badge = document.getElementById('loginStatusBadge');
+    const wrap = document.getElementById('loginTableWrap');
+    const exp = document.getElementById('loginExplain');
+
+    let matched = [];
+    USERS.forEach(u => {
+        if (mode === 'alice_ok' && u.username === 'alice') matched.push(u);
+        if (mode === 'admin_comment' && u.username === 'admin') matched.push(u);
+        if (mode === 'or_bypass') matched.push(u);
+    });
+
+    const rowsHtml = USERS.map(u => {
+        const m = matched.includes(u);
+        const isFirst = matched[0] && matched[0].id === u.id;
+        return `<tr class="${m ? 'matched' : 'filtered'}"><td>${u.id}</td><td><strong>${u.username}</strong></td><td>${u.role}</td><td><span class="eval-badge ${isFirst ? 'eval-true' : m ? 'eval-true' : 'eval-false'}">${isFirst ? '★ rows[0] (Logged In!)' : m ? '✓ Returned' : '✕ Filtered Out'}</span></td></tr>`;
+    }).join('');
+
+    wrap.innerHTML = `<table class="cb-table"><thead><tr><th>id</th><th>username</th><th>role</th><th>Backend Session Decision</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+
+    if (mode === 'alice_ok') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'alice\'</span> <span class="sql-kw">AND</span> password = <span class="sql-str">\'cat123\'</span>;';
+        badge.textContent = 'rows.length = 1 → Logged in: alice';
+        badge.className = 'cb-status';
+        exp.innerHTML = '<strong>Backend Check:</strong> <code>rows.length</code> is <code>1</code> (which is <code>&gt; 0</code>), so the backend logs the user into <code>rows[0]</code> (<strong>alice</strong>).';
+    } else if (mode === 'alice_bad') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'alice\'</span> <span class="sql-kw">AND</span> password = <span class="sql-str">\'wrong\'</span>;';
+        badge.textContent = 'rows.length = 0 → Access Denied';
+        badge.className = 'cb-status danger';
+        exp.innerHTML = '<strong>Backend Check:</strong> <code>rows.length</code> is <code>0</code>, so the backend enters the <code>else</code> branch and shows <em>"Invalid username or password."</em>';
+    } else if (mode === 'admin_comment') {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'admin\'</span> <span class="sql-comment">--\' AND password = \'anything\'</span>';
+        badge.textContent = 'rows.length = 1 → Logged in: admin!';
+        badge.className = 'cb-status warn';
+        exp.innerHTML = '<strong>Targeted Auth Bypass:</strong> By injecting <code>admin\' --</code>, the password check was erased, 1 row returned, and <code>rows[0]</code> logged you straight in as <strong>admin</strong>!';
+    } else {
+        sqlEl.innerHTML = '<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">\'\'</span> <span class="sql-inj">OR 1=1</span> <span class="sql-comment">--\' AND password = \'anything\'</span>';
+        badge.textContent = 'rows.length = 4 → Logged in: rows[0] (admin)!';
+        badge.className = 'cb-status danger';
+        exp.innerHTML = '<strong>Blanket Auth Bypass:</strong> All 4 rows returned! Because the backend code executes <code>loginAs(rows[0])</code>, it picks the very first row in the table—<strong>Row #1 (admin)</strong>!';
+    }
+}
+
+/* --- Lesson 08: Live Quote Breakout X-Ray --- */
+function setXrayInput(val, btn) {
+    activateBtn(btn);
+    document.getElementById('liveXrayField').value = val;
+    updateLiveXray();
+}
+
+function updateLiveXray() {
+    const raw = document.getElementById('liveXrayField').value;
+    const sqlEl = document.getElementById('xraySqlText');
+    const badge = document.getElementById('xrayStatusBadge');
+    const exp = document.getElementById('xrayExplain');
+
+    const quoteIdx = raw.indexOf("'");
+    if (quoteIdx === -1) {
+        sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">'${esc(raw)}'</span> <span class="sql-kw">AND</span> password = <span class="sql-str">'...'</span>;`;
+        badge.textContent = '✓ Safe Data Context';
+        badge.className = 'cb-status';
+        exp.innerHTML = '<strong>No Quote Breakout:</strong> Everything you typed stayed safely inside the green single-quoted string literal.';
+    } else {
+        const before = raw.slice(0, quoteIdx);
+        const after = raw.slice(quoteIdx + 1);
+        const commentIdx = after.indexOf('--');
+
+        if (commentIdx !== -1) {
+            const injected = after.slice(0, commentIdx);
+            const commented = after.slice(commentIdx);
+            sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">'${esc(before)}'</span><span class="sql-inj">${esc(injected)}</span> <span class="sql-comment">${esc(commented)}' AND password = '...';</span>`;
+            badge.textContent = '🚨 SQL Injection Active!';
+            badge.className = 'cb-status danger';
+            exp.innerHTML = `<strong>Full Quote Escape + Comment:</strong> Your <code>'</code> closed the data string after <code>'${esc(before)}'</code>, your red text (<code>${esc(injected.trim() || 'none')}</code>) became active SQL commands, and <code>--</code> commented out the trailing quote and password check!`;
+        } else {
+            sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">'${esc(before)}'</span><span class="sql-inj">${esc(after)}'</span> <span class="sql-kw">AND</span> password = <span class="sql-str">'...'</span>;`;
+            badge.textContent = '⚠️ Unclosed Quote Crash (500 Error)';
+            badge.className = 'cb-status warn';
+            exp.innerHTML = '<strong>Unbalanced Quote Detected!</strong> Your single quote closed the username string early, leaving the developer\'s closing quote dangling without a partner. Add <code>--</code> to comment out the rest of the query!';
+        }
+    }
+}
+
+/* --- Lesson 09: Multi-Technique SQLi Simulator --- */
+function runTypesSim(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('typesSqlText');
+    const badge = document.getElementById('typesStatusBadge');
+    const wrap = document.getElementById('typesTableWrap');
+    const exp = document.getElementById('typesExplain');
+
+    if (mode === 'union') {
+        sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> name, price <span class="sql-kw">FROM</span> products <span class="sql-kw">WHERE</span> category = <span class="sql-str">'hardware'</span> <span class="sql-inj">UNION SELECT username, password FROM users --</span>`;
+        badge.textContent = 'In-Band: Direct Table Dump';
+        badge.className = 'cb-status danger';
+        wrap.innerHTML = `
+            <table class="cb-table">
+                <thead><tr><th>Column 1 (name / username)</th><th>Column 2 (price / password)</th><th>Source Table</th></tr></thead>
+                <tbody>
+                    <tr><td>Pro Security Laptop</td><td>1200</td><td><span class="eval-badge eval-false">products table</span></td></tr>
+                    <tr class="matched"><td><strong>admin</strong></td><td><strong>root@99!</strong></td><td><span class="eval-badge eval-danger">Stolen from users via UNION!</span></td></tr>
+                    <tr class="matched"><td><strong>alice</strong></td><td><strong>cat123</strong></td><td><span class="eval-badge eval-danger">Stolen from users via UNION!</span></td></tr>
+                </tbody>
+            </table>
+        `;
+        exp.innerHTML = '<strong>In-Band UNION-Based SQLi:</strong> Because the product page prints query results on screen, <code>UNION SELECT</code> stitches secret rows from the <code>users</code> table right into the public product list.';
+    } else if (mode === 'error') {
+        sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> products <span class="sql-kw">WHERE</span> id = <span class="sql-inj">1 AND 1=CAST((SELECT password FROM users LIMIT 1) AS INT)--</span>`;
+        badge.textContent = 'In-Band: Error Message Leak';
+        badge.className = 'cb-status warn';
+        wrap.innerHTML = `<div style="padding:16px;color:var(--danger);font-family:'JetBrains Mono',monospace;font-size:13px">PostgreSQL Error: invalid input syntax for type integer: <strong>"root@99!"</strong></div>`;
+        exp.innerHTML = '<strong>In-Band Error-Based SQLi:</strong> Forcing the database to convert the text password into an <code>INT</code> tricks a verbose error page into printing the secret value inside the error message!';
+    } else if (mode === 'bool') {
+        sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">'admin'</span> <span class="sql-inj">AND SUBSTR(password, 1, 1) = 'r' --</span>`;
+        badge.textContent = 'Blind Boolean: Page Says "Welcome!" (TRUE)';
+        badge.className = 'cb-status';
+        wrap.innerHTML = `
+            <div style="padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#e2e8f0">
+                Probe 1: <code>SUBSTR(password,1,1) = 'a'</code> → Page hides banner (FALSE ✕)<br>
+                Probe 2: <code>SUBSTR(password,1,1) = 'r'</code> → Page shows "Welcome back!" (<strong style="color:var(--success)">TRUE ✓ → First letter is 'r'!</strong>)
+            </div>
+        `;
+        exp.innerHTML = '<strong>Boolean-Based Blind SQLi:</strong> Even when zero database rows or errors are printed, any tiny difference between a TRUE page and a FALSE page lets you deduce passwords one letter at a time.';
+    } else {
+        sqlEl.innerHTML = `<span class="sql-kw">SELECT</span> * <span class="sql-kw">FROM</span> users <span class="sql-kw">WHERE</span> username = <span class="sql-str">'admin'</span> <span class="sql-inj">AND IF(SUBSTR(password,1,1)='r', SLEEP(3), 0) --</span>`;
+        badge.textContent = 'Blind Time-Based: 3,018 ms Delay (TRUE)';
+        badge.className = 'cb-status warn';
+        wrap.innerHTML = `
+            <div style="padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#e2e8f0">
+                If condition is FALSE → Server responds in <strong>14 ms</strong> (Immediate)<br>
+                If condition is TRUE → Server pauses for <strong>3,018 ms</strong> (<strong style="color:var(--warn)">3-Second Delay Confirms Letter 'r'!</strong>)
+            </div>
+        `;
+        exp.innerHTML = '<strong>Time-Based Blind SQLi:</strong> When the webpage looks 100% identical for True and False, the stopwatch becomes your signal.';
+    }
+}
+
+/* --- Lesson 10: Defense Simulator --- */
+function runDefenseSim(mode, btn) {
+    activateBtn(btn);
+    const sqlEl = document.getElementById('defSqlText');
+    const badge = document.getElementById('defStatusBadge');
+    const wrap = document.getElementById('defTableWrap');
+    const exp = document.getElementById('defExplain');
+
+    if (mode === 'vuln') {
+        sqlEl.innerHTML = `cursor.execute(<span class="sql-str">"SELECT * FROM users WHERE username = '"</span> + <span class="sql-inj">"admin' OR 1=1 --"</span> + <span class="sql-str">"'"</span>)`;
+        badge.textContent = '❌ Vulnerable: All 4 Rows Dumped!';
+        badge.className = 'cb-status danger';
+        wrap.innerHTML = `<div style="padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--danger)">Result: Input modified the SQL grammar tree → Logged in as <strong>admin</strong>!</div>`;
+        exp.innerHTML = '<strong>Why Concatenation Failed:</strong> The database parsed the developer\'s SQL keywords and the user\'s input at the same time.';
+    } else {
+        sqlEl.innerHTML = `cursor.execute(<span class="sql-kw">"SELECT * FROM users WHERE username = ?"</span>, (<span class="sql-str">"admin' OR 1=1 --"</span>,))`;
+        badge.textContent = '✅ Secure: 0 Rows Matched';
+        badge.className = 'cb-status';
+        wrap.innerHTML = `<div style="padding:16px;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--success)">Result: Database searched for literal username <code>"admin' OR 1=1 --"</code> → 0 rows found. Attack completely neutralized!</div>`;
+        exp.innerHTML = '<strong>Why Prepared Statements Succeed:</strong> The database compiled the query structure with the <code>?</code> placeholder first, then placed the attacker\'s string strictly inside the data slot.';
+    }
+}
+
+/* Keyboard Left / Right Navigation */
+window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowRight') stepLesson(1);
+    if (e.key === 'ArrowLeft') stepLesson(-1);
+    if (e.key === 'Escape') toggleCheatModal(false);
+});
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadLesson(0);
+});
+</script>
+</body>
+</html>
